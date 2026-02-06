@@ -1,7 +1,22 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from '../App';
+
+// Mock de hooks para evitar errores de contexto
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: () => ({
+    hasPermission: () => true,
+    user: { name: 'Test User' },
+    logout: vi.fn()
+  })
+}));
+
+vi.mock('../hooks/useStore', () => ({
+  useStore: () => ({
+    store: { id: '1', name: 'Test Store' }
+  })
+}));
 
 describe('App.tsx', () => {
   beforeEach(() => {

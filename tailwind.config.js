@@ -11,8 +11,8 @@ export default {
           primary: '#37352f',
           secondary: '#9ca3af',
           border: '#e5e5e5',
-          background: '#ffffff',
-          hover: '#f8f9fa',
+          background: '#F5F5DC', // Soft Beige
+          hover: '#f0f0e6',
           blue: '#2563eb',
           purple: '#a855f7',
           green: '#16a34a',

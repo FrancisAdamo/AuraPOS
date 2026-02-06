@@ -3,6 +3,15 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Sidebar from '../components/Sidebar';
 
+// Mock del hook useAuth
+vi.mock('../hooks/useAuth', () => ({
+  useAuth: () => ({
+    hasPermission: () => true,
+    user: { name: 'Test User' },
+    logout: vi.fn()
+  })
+}));
+
 interface SidebarProps {
   activeView: string;
   onViewChange: (view: string) => void;
