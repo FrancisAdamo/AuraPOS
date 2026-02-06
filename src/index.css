@@ -11,31 +11,57 @@
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    @apply bg-notion-background text-notion-primary;
-    @apply m-0 p-0;
+    background-color: #F5F5DC;
+    color: #37352f;
+    margin: 0;
+    padding: 0;
   }
 }
 
 /* Custom component classes */
 @layer components {
   .notion-card {
-    @apply bg-notion-background border border-notion-border rounded-sm shadow-sm;
+    background-color: #F5F5DC;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.125rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   }
 
   .notion-hover {
-    @apply transition-colors duration-200 ease-in-out;
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
   }
 
   .notion-button {
-    @apply px-4 py-3 rounded-sm font-medium transition-all duration-200 ease-in-out;
+    padding: 0.75rem 1rem;
+    border-radius: 0.125rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
   }
 
   .notion-button-primary {
-    @apply notion-button bg-notion-blue text-white hover:bg-blue-600;
+    padding: 0.75rem 1rem;
+    border-radius: 0.125rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    background-color: #2563eb;
+    color: white;
+  }
+
+  .notion-button-primary:hover {
+    background-color: #1d4ed8;
   }
 
   .notion-button-secondary {
-    @apply notion-button bg-transparent text-notion-primary hover:bg-notion-hover;
+    padding: 0.75rem 1rem;
+    border-radius: 0.125rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    background-color: transparent;
+    color: #37352f;
+  }
+
+  .notion-button-secondary:hover {
+    background-color: #f0f0e6;
   }
 }
 

@@ -11,6 +11,7 @@ const AlertDashboard = lazy(() => import('./components/AlertDashboard'));
 const PointOfSaleTerminal = lazy(() => import('./components/PointOfSaleTerminal'));
 const InventoryManagement = lazy(() => import('./components/InventoryManagement'));
 const CashClosing = lazy(() => import('./components/CashClosing'));
+const HelpPage = lazy(() => import('./components/HelpPage'));
 
 export default function App() {
   const [activeView, setActiveView] = useState('pos'); // Cambiar a POS como página de inicio
@@ -48,6 +49,7 @@ export default function App() {
               {activeView === 'pos' && <PointOfSaleTerminal />}
               {activeView === 'inventory' && <InventoryManagement />}
               {activeView === 'closing' && <CashClosing />}
+              {activeView === 'help' && <HelpPage />}
             </Suspense>
           </div>
         </main>

@@ -1,4 +1,4 @@
-import { BarChart3, Boxes, Zap, LogOut } from 'lucide-react';
+import { BarChart3, Boxes, Zap, LogOut, HelpCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { PERMISSIONS } from '../types/auth';
 
@@ -15,10 +15,13 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
     { id: 'pos', label: 'Ventas (POS)', icon: Zap, permission: PERMISSIONS.VIEW_POS },
     { id: 'inventory', label: 'Inventario', icon: Boxes, permission: PERMISSIONS.VIEW_INVENTORY },
     { id: 'closing', label: 'Cierre de caja', icon: LogOut, permission: PERMISSIONS.VIEW_CLOSING },
+    { id: 'help', label: 'Ayuda', icon: HelpCircle, permission: null }, // Accesible para todos
   ];
 
   // Filtrar items según permisos del usuario
-  const menuItems = allMenuItems.filter(item => hasPermission(item.permission));
+  const menuItems = allMenuItems.filter(item => 
+    item.permission === null || hasPermission(item.permission)
+  );
 
   return (
     <aside className="w-64 border-r border-notion-border bg-notion-background flex flex-col font-sans">

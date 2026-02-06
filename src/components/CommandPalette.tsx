@@ -41,6 +41,12 @@ export default function CommandPalette({ onClose, onSelect }: CommandPaletteProp
       description: 'Realizar cierre diario de ventas',
       category: 'Navegación',
     },
+    {
+      id: 'help',
+      label: 'Centro de Ayuda',
+      description: 'Manual de usuario y documentación',
+      category: 'Navegación',
+    },
   ];
 
   const filtered = useMemo(() => {
