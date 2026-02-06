@@ -1,33 +1,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* AuraPOS - Main Styles (Notion-Style Aesthetic) */
+/* Custom base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-html {
-  scroll-behavior: smooth;
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-notion-background text-notion-primary;
+    @apply m-0 p-0;
+  }
 }
 
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background: #ffffff;
-  color: #37352f;
-  margin: 0;
-  padding: 0;
-}
+/* Custom component classes */
+@layer components {
+  .notion-card {
+    @apply bg-notion-background border border-notion-border rounded-sm shadow-sm;
+  }
 
-/* Custom utility classes (fallback for Tailwind CDN) */
-.notion-border {
-  border: 1px solid #e5e5e5;
-}
+  .notion-hover {
+    @apply transition-colors duration-200 ease-in-out;
+  }
 
-.notion-card {
-  background: #ffffff;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
+  .notion-button {
+    @apply px-4 py-3 rounded-sm font-medium transition-all duration-200 ease-in-out;
+  }
 
-.notion-hover {
-  transition: background-color 0.2s ease;
+  .notion-button-primary {
+    @apply notion-button bg-notion-blue text-white hover:bg-blue-600;
+  }
+
+  .notion-button-secondary {
+    @apply notion-button bg-transparent text-notion-primary hover:bg-notion-hover;
+  }
 }
 
 .notion-hover:hover {

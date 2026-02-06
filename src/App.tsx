@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { Command } from 'lucide-react';
 import Sidebar from './components/Sidebar';
 import AlertDashboard from './components/AlertDashboard';
-import POSModule from './components/POSModule';
-import InventoryModule from './components/InventoryModule';
+import PointOfSaleTerminal from './components/PointOfSaleTerminal';
+import InventoryManagement from './components/InventoryManagement';
 import CashClosing from './components/CashClosing';
 import CommandPalette from './components/CommandPalette';
 import AuraBrain from './components/AuraBrain';
@@ -31,61 +31,75 @@ export default function App() {
   }, []);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', backgroundColor: 'white' }}>
-      <Sidebar activeView={activeView} onViewChange={setActiveView} />
+    <div className="flex h-screen bg-notion-background">
+      <header role="banner">
+        <Sidebar activeView={activeView} onViewChange={setActiveView} />
+      </header>
       
-      <main style={{ flex: 1, overflowY: 'auto' }}>
-        <div style={{ padding: '2rem' }}>
+      <main role="main" className="flex-1 overflow-y-auto">
+        <div className="p-8">
           {activeView === 'dashboard' && <AlertDashboard />}
-          {activeView === 'pos' && <POSModule />}
-          {activeView === 'inventory' && <InventoryModule />}
+          {activeView === 'pos' && <PointOfSaleTerminal />}
+          {activeView === 'inventory' && <InventoryManagement />}
           {activeView === 'closing' && <CashClosing />}
         </div>
       </main>
 
-      {/* Command Palette */}
+      {/* Command Palette - Modal */}
       {showCommand && (
-        <CommandPalette 
-          onClose={() => setShowCommand(false)}
-          onSelect={handleCommandSelect}
-        />
+        <div 
+          role="dialog" 
+          aria-modal="true" 
+          aria-labelledby="command-palette-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-notion-background/80"
+        >
+          <div className="notion-card rounded-lg p-6 max-w-2xl w-full mx-4">
+            <CommandPalette 
+              onClose={() => setShowCommand(false)}
+              onSelect={handleCommandSelect}
+            />
+          </div>
+        </div>
       )}
 
-      {/* Aura Brain Button */}
-      <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 40 }}>
+      {/* Aura Brain Assistant - Floating Action */}
+      <aside 
+        role="complementary" 
+        aria-label="Asistente IA Aura Brain" 
+        className="fixed bottom-8 right-8 z-40"
+      >
         <button
           onClick={() => setShowAuraBrain(!showAuraBrain)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem 1rem',
-            background: 'linear-gradient(to right, rgb(168, 85, 247), rgb(236, 72, 153))',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            boxShadow: '0 10px 15px rgba(0, 0, 0, 0.1)',
-            cursor: 'pointer',
-            fontWeight: 500,
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 20px 25px rgba(0, 0, 0, 0.15)')}
-          onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 10px 15px rgba(0, 0, 0, 0.1)')}
+          className="flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl cursor-pointer"
+          aria-label="Activar asistente Aura Brain"
+          aria-expanded={showAuraBrain}
         >
-          <span style={{ fontSize: '1.125rem' }}>✨</span>
+          <span className="text-lg">✨</span>
           <span>Activar Aura Brain</span>
         </button>
-      </div>
+      </aside>
 
       {/* Aura Brain Modal */}
       {showAuraBrain && (
-        <AuraBrain onClose={() => setShowAuraBrain(false)} />
+        <div 
+          role="dialog" 
+          aria-modal="true" 
+          aria-labelledby="aura-brain-title"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-notion-background/90 p-4"
+        >
+          <AuraBrain onClose={() => setShowAuraBrain(false)} />
+        </div>
       )}
 
       {/* Keyboard Shortcut Indicator */}
-      <div style={{ position: 'fixed', bottom: '2rem', left: '16rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#9ca3af', fontSize: '0.875rem', paddingLeft: '1rem' }}>
-        <Command size={16} />
+      <footer 
+        role="contentinfo" 
+        aria-label="Atajo de teclado"
+        className="fixed bottom-8 left-64 flex items-center gap-2 text-notion-secondary text-sm pl-4"
+      >
+        <Command size={16} aria-hidden="true" />
         <span>+ K para comandos</span>
-      </div>
+      </footer>
     </div>
   );
 }

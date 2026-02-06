@@ -14,43 +14,23 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
   ];
 
   return (
-    <aside style={{
-      width: '16rem',
-      borderRight: '1px solid #e5e5e5',
-      backgroundColor: 'white',
-      display: 'flex',
-      flexDirection: 'column',
-      fontFamily: 'Inter, system-ui, sans-serif',
-    }}>
+    <aside className="w-64 border-r border-notion-border bg-notion-background flex flex-col font-sans">
       {/* Header */}
-      <div style={{
-        padding: '1.5rem',
-        borderBottom: '1px solid #e5e5e5',
-      }}>
-        <h1 style={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          color: '#37352f',
-          margin: 0,
-        }}>
-          Aura<span style={{ color: '#a855f7' }}>POS</span>
+      <header className="p-6 border-b border-notion-border">
+        <h1 className="text-2xl font-bold text-notion-primary m-0">
+          Aura<span className="text-purple-500">POS</span>
         </h1>
-        <p style={{
-          fontSize: '0.875rem',
-          color: '#9ca3af',
-          marginTop: '0.25rem',
-          margin: 0,
-        }}>ERP de próxima generación</p>
-      </div>
+        <p className="text-sm text-notion-secondary mt-1 m-0">
+          ERP de próxima generación
+        </p>
+      </header>
 
       {/* Navigation */}
-      <nav style={{
-        flex: 1,
-        padding: '1.5rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-      }}>
+      <nav 
+        role="navigation" 
+        aria-label="Navegación principal"
+        className="flex-1 p-6 flex flex-col gap-2"
+      >
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.id;
@@ -59,35 +39,15 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
             <button
               key={item.id}
               onClick={() => onViewChange(item.id)}
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                padding: '0.75rem 1rem',
-                borderRadius: '0.125rem',
-                border: 'none',
-                backgroundColor: isActive ? '#dbeafe' : 'transparent',
-                color: isActive ? '#2563eb' : '#37352f',
-                cursor: 'pointer',
-                fontWeight: 500,
-                fontSize: '1rem',
-                transition: 'all 0.2s ease',
-                borderLeft: isActive ? '2px solid #2563eb' : 'none',
-                paddingLeft: isActive ? 'calc(1rem - 2px)' : '1rem',
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = '#f5f5f5';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
-                }
-              }}
+              className={`w-full flex items-center gap-3 p-3 rounded-sm font-medium text-base transition-all duration-200 border-none cursor-pointer ${
+                isActive 
+                  ? 'bg-blue-100 text-blue-600 border-l-2 border-l-blue-600 pl-4' 
+                  : 'bg-transparent text-notion-primary hover:bg-notion-hover'
+              }`}
+              aria-current={isActive}
+              aria-label={`Navegar a ${item.label}`}
             >
-              <Icon size={20} />
+              <Icon size={20} aria-hidden="true" />
               <span>{item.label}</span>
             </button>
           );
@@ -95,18 +55,13 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div style={{
-        padding: '1.5rem',
-        borderTop: '1px solid #e5e5e5',
-        fontSize: '0.75rem',
-        color: '#9ca3af',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.5rem',
-      }}>
-        <p style={{ margin: 0 }}>Versión 1.0.0</p>
-        <p style={{ margin: 0 }}>© 2026 AuraPOS - All rights reserved</p>
-      </div>
+      <footer 
+        role="contentinfo" 
+        className="p-6 border-t border-notion-border text-notion-secondary text-sm flex flex-col gap-2"
+      >
+        <p className="m-0">Versión 1.0.0</p>
+        <p className="m-0">© 2026 AuraPOS - All rights reserved</p>
+      </footer>
     </aside>
   );
 }

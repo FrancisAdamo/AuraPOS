@@ -1,33 +1,13 @@
 import { Search, Plus, Trash2, CheckCircle, Percent } from 'lucide-react';
 import { useState } from 'react';
+import { PRODUCT_CATALOG } from '../data/products';
+import { useCart } from '../hooks';
+import { Card, Button, Input } from './ui';
+import type { ProductSaleItem } from '../types/products';
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-export default function POSModule() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [discountPercentage, setDiscountPercentage] = useState(0);
-  const [showDiscountInput, setShowDiscountInput] = useState(false);
-
-  const products = [
-    { id: 1, name: 'Proteína Whey Vainilla', price: 45.99, category: 'Proteínas' },
-    { id: 2, name: 'Proteína Whey Chocolate', price: 45.99, category: 'Proteínas' },
-    { id: 3, name: 'Creatina Monohidrato', price: 28.50, category: 'Suplementos' },
-    { id: 4, name: 'BCAA Limón', price: 35.99, category: 'Aminoácidos' },
-    { id: 5, name: 'Multivitamínico Diario', price: 22.99, category: 'Vitaminas' },
-    { id: 6, name: 'Barrita Proteica Almendra', price: 3.50, category: 'Snacks' },
-    { id: 7, name: 'Omega 3 Premium', price: 32.99, category: 'Suplementos' },
-    { id: 8, name: 'Colágeno Hidrolizado', price: 38.50, category: 'Colágeno' },
-  ];
-
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+export default function PointOfSaleTerminal() {
+  const { searchTerm, setSearchTerm, filteredItems } = useSearch(PRODUCT_CATALOG, ['name']);
+  const { items, addItem, removeItem, clearCart, total, itemCount, isEmpty } = useCart();
   );
 
   const addToCart = (product: typeof products[0]) => {
