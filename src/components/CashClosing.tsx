@@ -84,10 +84,14 @@ export default function CashClosing() {
       return;
     }
     
+    // Generate timestamp outside of render
+    const now = new Date();
+    const timestamp = now.getTime();
+    
     // Guardar en el historial
     const newRecord: CashClosureRecord = {
-      id: `closure-${Date.now()}`,
-      date: new Date().toLocaleDateString('es-ES', { 
+      id: `closure-${timestamp}`,
+      date: now.toLocaleDateString('es-ES', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric'
@@ -117,7 +121,7 @@ export default function CashClosing() {
   };
 
   const downloadPDF = () => {
-    const doc = new (jsPDF as any)();
+    const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const margin = 15;

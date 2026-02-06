@@ -84,7 +84,7 @@ export default function InventoryModule() {
     }
     
     return result;
-  }, [searchTerm, selectedProvider]);
+  }, [searchTerm, selectedProvider, inventory]);
 
   const groupedByProvider = filteredInventory.reduce((acc, item) => {
     if (!acc[item.provider]) {

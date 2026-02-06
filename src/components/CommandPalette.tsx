@@ -50,7 +50,7 @@ export default function CommandPalette({ onClose, onSelect }: CommandPaletteProp
       cmd.label.toLowerCase().includes(search.toLowerCase()) ||
       cmd.description.toLowerCase().includes(search.toLowerCase())
     );
-  }, [search]);
+  }, [search, commands]);
 
   const handleSelect = (id: string) => {
     onSelect(id);
