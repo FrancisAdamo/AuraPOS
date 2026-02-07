@@ -43,7 +43,7 @@ export function useProductForm({ defaultValues, onSubmit }: UseProductFormProps)
       vegan: false,
       ...defaultValues
     },
-    mode: 'onChange'
+    mode: 'all'
   });
 
   const onFormSubmit: SubmitHandler<ProductFormData> = async (data) => {
@@ -82,7 +82,8 @@ export function useProductForm({ defaultValues, onSubmit }: UseProductFormProps)
   return {
     // Form control
     register,
-    handleSubmit: handleSubmit(onFormSubmit) as any,
+    handleSubmit: handleSubmit as any,
+    onFormSubmit: onFormSubmit,
     reset,
     setValue: setFieldValue,
     watch,

@@ -17,6 +17,7 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
     errors,
     isValid,
     isSubmitting,
+    onFormSubmit,
     submitError,
     getFieldError,
     hasFieldError,
@@ -27,15 +28,19 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
   const watchedValues = watch();
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6" data-testid="product-form">
       {/* Información Básica */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-name"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Nombre del Producto *
           </label>
           <Input
             {...register('name')}
+            id="product-name"
             placeholder="Ej: Proteína Whey Vainilla"
             className={hasFieldError('name') ? 'border-red-500' : ''}
           />
@@ -48,11 +53,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-sku"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             SKU *
           </label>
           <Input
             {...register('sku')}
+            id="product-sku"
             placeholder="Ej: PROTEIN-WHEY-VAN-1KG"
             className={hasFieldError('sku') ? 'border-red-500' : ''}
           />
@@ -65,11 +74,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-provider"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Proveedor *
           </label>
           <Input
             {...register('provider')}
+            id="product-provider"
             placeholder="Ej: NutriFit Pro"
             className={hasFieldError('provider') ? 'border-red-500' : ''}
           />
@@ -82,11 +95,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-stock"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Stock *
           </label>
           <Input
             {...register('stock')}
+            id="product-stock"
             type="number"
             placeholder="0"
             className={hasFieldError('stock') ? 'border-red-500' : ''}
@@ -103,11 +120,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
       {/* Detalles Adicionales */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-barcode"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Código de Barras
           </label>
           <Input
             {...register('barcode')}
+            id="product-barcode"
             placeholder="Ej: 1234567890123"
             className={hasFieldError('barcode') ? 'border-red-500' : ''}
           />
@@ -120,11 +141,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-brand"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Marca
           </label>
           <Input
             {...register('brand')}
+            id="product-brand"
             placeholder="Ej: NutriFit Pro"
             className={hasFieldError('brand') ? 'border-red-500' : ''}
           />
@@ -137,11 +162,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-flavor"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Sabor
           </label>
           <Input
             {...register('flavor')}
+            id="product-flavor"
             placeholder="Ej: Vainilla"
             className={hasFieldError('flavor') ? 'border-red-500' : ''}
           />
@@ -154,11 +183,17 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-format"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Formato
           </label>
           <select
-            {...register('format')}
+            {...register('format', {
+              setValueAs: (value) => (value ? value : undefined),
+            })}
+            id="product-format"
             className={`w-full px-3 py-2 border border-notion-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
               hasFieldError('format') ? 'border-red-500' : ''
             }`}
@@ -196,11 +231,15 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-notion-primary mb-2">
+          <label
+            htmlFor="product-weight"
+            className="block text-sm font-medium text-notion-primary mb-2"
+          >
             Peso
           </label>
           <Input
             {...register('weight')}
+            id="product-weight"
             placeholder="Ej: 1000g"
             className={hasFieldError('weight') ? 'border-red-500' : ''}
           />
@@ -255,6 +294,7 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
             <input
               {...register('organic')}
               type="checkbox"
+              aria-label="Orgánico"
               className="w-4 h-4 text-blue-600 border-notion-border rounded focus:ring-blue-500"
             />
             <div>
@@ -267,6 +307,7 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
             <input
               {...register('glutenFree')}
               type="checkbox"
+              aria-label="Sin TACC"
               className="w-4 h-4 text-blue-600 border-notion-border rounded focus:ring-blue-500"
             />
             <div>
@@ -279,6 +320,7 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
             <input
               {...register('vegan')}
               type="checkbox"
+              aria-label="Vegano"
               className="w-4 h-4 text-blue-600 border-notion-border rounded focus:ring-blue-500"
             />
             <div>
@@ -305,14 +347,14 @@ export function ProductForm({ defaultValues, onSubmit, onCancel, isLoading = fal
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          variant="outline"
+          variant="secondary"
         >
           Cancelar
         </Button>
         
         <Button
           type="submit"
-          disabled={!isValid || isSubmitting || isLoading}
+          disabled={isSubmitting || isLoading || !isValid}
           className="flex items-center gap-2"
         >
           {isSubmitting || isLoading ? (

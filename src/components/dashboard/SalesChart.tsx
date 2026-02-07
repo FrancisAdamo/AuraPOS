@@ -5,7 +5,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
   BarChart,
   Bar,
@@ -31,56 +30,10 @@ export function SalesChart({ data, period, comparisonData }: SalesChartProps) {
       isCollapsible
     >
       <div className="space-y-6">
-        {/* Gráfico de líneas - Facturación vs Ventas */}
+        {/* Histograma - Análisis de Ventas por Hora */}
         <div>
           <h4 className="font-medium text-notion-primary mb-4">
-            Facturación vs Ventas
-          </h4>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
-              <XAxis 
-                dataKey="date" 
-                tick={{ fontSize: 12 }}
-                stroke="#9ca3af"
-              />
-              <YAxis 
-                tick={{ fontSize: 12 }}
-                stroke="#9ca3af"
-              />
-              <Tooltip 
-                contentStyle={{
-                  backgroundColor: '#37352f',
-                  border: 'none',
-                  borderRadius: '8px',
-                  color: '#ffffff',
-                }}
-              />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="facturacion"
-                stroke="#2563eb"
-                strokeWidth={2}
-                name="Facturación"
-                dot={{ fill: '#2563eb', r: 4 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="ventas"
-                stroke="#16a34a"
-                strokeWidth={2}
-                name="Ventas"
-                dot={{ fill: '#16a34a', r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Gráfico de barras - Picos de venta */}
-        <div>
-          <h4 className="font-medium text-notion-primary mb-4">
-            Picos de Venta por Hora
+            Análisis de Ventas por Hora
           </h4>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={data}>
@@ -103,12 +56,94 @@ export function SalesChart({ data, period, comparisonData }: SalesChartProps) {
                 }}
               />
               <Bar
+                type="monotone"
                 dataKey="ventas"
                 fill="#a855f7"
                 name="Ventas"
                 radius={[8, 8, 0, 0]}
               />
             </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Histograma - Análisis de Facturación por Hora */}
+        <div>
+          <h4 className="font-medium text-notion-primary mb-4">
+            Análisis de Facturación por Hora
+          </h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
+              <XAxis 
+                dataKey="date" 
+                tick={{ fontSize: 12 }}
+                stroke="#9ca3af"
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }}
+                stroke="#9ca3af"
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: '#37352f',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                }}
+              />
+              <Bar
+                type="monotone"
+                dataKey="facturacion"
+                fill="#16a34a"
+                name="Facturación"
+                radius={[8, 8, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Gráfico de líneas - Tendencia de Ventas */}
+        <div>
+          <h4 className="font-medium text-notion-primary mb-4">
+            Tendencia de Ventas
+          </h4>
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
+              <XAxis 
+                dataKey="date" 
+                tick={{ fontSize: 12 }}
+                stroke="#9ca3af"
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }}
+                stroke="#9ca3af"
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: '#37352f',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="ventas"
+                stroke="#16a34a"
+                strokeWidth={2}
+                name="Ventas"
+                dot={{ fill: '#16a34a', r: 4 }}
+              />
+              <Line
+                type="monotone"
+                dataKey="facturacion"
+                stroke="#2563eb"
+                strokeWidth={2}
+                name="Facturación"
+                dot={{ fill: '#2563eb', r: 4 }}
+              />
+            </LineChart>
           </ResponsiveContainer>
         </div>
 
@@ -139,7 +174,7 @@ export function SalesChart({ data, period, comparisonData }: SalesChartProps) {
                   ((data.reduce((sum, d) => sum + d.facturacion, 0) - 
                    comparisonData.reduce((sum, d) => sum + d.facturacion, 0)) /
                    comparisonData.reduce((sum, d) => sum + d.facturacion, 0) * 100
-                ).toFixed(1))}%
+                ).toFixed(1)}%
               </p>
             </div>
           </div>

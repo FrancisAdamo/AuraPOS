@@ -144,7 +144,7 @@ export function DragDropDashboard() {
       case 'sales-chart':
         return (
           <SortableWidget key={widgetId} id={widgetId} isCollapsed={isCollapsed} exportData={exportData}>
-            <SalesChart data={MOCK_SALES_DATA} period="Semana" />
+            <SalesChart data={MOCK_SALES_DATA} period="Semanal" />
           </SortableWidget>
         );
       

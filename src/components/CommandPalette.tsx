@@ -71,8 +71,8 @@ export default function CommandPalette({ onClose, onSelect }: CommandPaletteProp
   }, {} as Record<string, CommandItem[]>);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 bg-black/50" onClick={onClose}>
-      <div className="w-full max-w-xl bg-white rounded-lg shadow-2xl border border-notion-border" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-black/50" onClick={onClose}>
+      <div className="w-full max-w-2xl mx-4 bg-white rounded-lg shadow-2xl border-notion-border" onClick={e => e.stopPropagation()}>
         
         {/* Search Input */}
         <div className="px-4 py-3 border-b border-notion-border">

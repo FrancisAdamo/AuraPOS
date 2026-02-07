@@ -23,7 +23,11 @@ export function InventoryFilters({
 }: InventoryFiltersProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleFilterChange = (key: keyof InventoryFilter, value: any) => {
+  const brandOptions = brands.length ? brands : BRAND_OPTIONS;
+  const flavorOptions = flavors.length ? flavors : FLAVOR_OPTIONS;
+  const formatOptions = formats.length ? formats : FORMAT_OPTIONS;
+
+  const handleFilterChange = (key: keyof InventoryFilter, value: unknown) => {
     onFiltersChange({
       ...filters,
       [key]: value
@@ -76,16 +80,20 @@ export function InventoryFilters({
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Marca */}
           <div>
-            <label className="block text-sm font-medium text-notion-primary mb-2">
+            <label
+              htmlFor="inventory-filter-brand"
+              className="block text-sm font-medium text-notion-primary mb-2"
+            >
               Marca
             </label>
             <select
+              id="inventory-filter-brand"
               value={filters.brand || ''}
               onChange={(e) => handleFilterChange('brand', e.target.value || undefined)}
               className="w-full px-3 py-2 border border-notion-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todas las marcas</option>
-              {BRAND_OPTIONS.map(brand => (
+              {brandOptions.map(brand => (
                 <option key={brand} value={brand}>{brand}</option>
               ))}
             </select>
@@ -93,16 +101,20 @@ export function InventoryFilters({
 
           {/* Sabor */}
           <div>
-            <label className="block text-sm font-medium text-notion-primary mb-2">
+            <label
+              htmlFor="inventory-filter-flavor"
+              className="block text-sm font-medium text-notion-primary mb-2"
+            >
               Sabor
             </label>
             <select
+              id="inventory-filter-flavor"
               value={filters.flavor || ''}
               onChange={(e) => handleFilterChange('flavor', e.target.value || undefined)}
               className="w-full px-3 py-2 border border-notion-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los sabores</option>
-              {FLAVOR_OPTIONS.map(flavor => (
+              {flavorOptions.map(flavor => (
                 <option key={flavor} value={flavor}>{flavor}</option>
               ))}
             </select>
@@ -110,16 +122,20 @@ export function InventoryFilters({
 
           {/* Formato */}
           <div>
-            <label className="block text-sm font-medium text-notion-primary mb-2">
+            <label
+              htmlFor="inventory-filter-format"
+              className="block text-sm font-medium text-notion-primary mb-2"
+            >
               Formato
             </label>
             <select
+              id="inventory-filter-format"
               value={filters.format || ''}
               onChange={(e) => handleFilterChange('format', e.target.value || undefined)}
               className="w-full px-3 py-2 border border-notion-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Todos los formatos</option>
-              {FORMAT_OPTIONS.map(format => (
+              {formatOptions.map(format => (
                 <option key={format} value={format}>{format}</option>
               ))}
             </select>
@@ -127,10 +143,14 @@ export function InventoryFilters({
 
           {/* Rango de Stock */}
           <div>
-            <label className="block text-sm font-medium text-notion-primary mb-2">
+            <label
+              htmlFor="inventory-filter-min-stock"
+              className="block text-sm font-medium text-notion-primary mb-2"
+            >
               Stock Mínimo
             </label>
             <input
+              id="inventory-filter-min-stock"
               type="number"
               value={filters.minStock || ''}
               onChange={(e) => handleFilterChange('minStock', e.target.value ? parseInt(e.target.value) : undefined)}
@@ -140,10 +160,14 @@ export function InventoryFilters({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-notion-primary mb-2">
+            <label
+              htmlFor="inventory-filter-max-stock"
+              className="block text-sm font-medium text-notion-primary mb-2"
+            >
               Stock Máximo
             </label>
             <input
+              id="inventory-filter-max-stock"
               type="number"
               value={filters.maxStock || ''}
               onChange={(e) => handleFilterChange('maxStock', e.target.value ? parseInt(e.target.value) : undefined)}

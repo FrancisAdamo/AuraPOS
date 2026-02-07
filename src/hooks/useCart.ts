@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { ProductSaleItem, ProductIdentifier, MonetaryAmount } from '../types/products';
+import { ProductSaleItemSchema } from '../schemas/products';
 
 interface UseCartOptions {
   onItemAdd?: (item: ProductSaleItem) => void;
@@ -11,6 +12,13 @@ export function useCart(options: UseCartOptions = {}) {
   const [items, setItems] = useState<ProductSaleItem[]>([]);
   
   const addItem = useCallback((product: ProductSaleItem) => {
+    // Validar el item con Zod antes de agregarlo
+    const validationResult = ProductSaleItemSchema.safeParse(product);
+    if (!validationResult.success) {
+      console.error('Error de validación en item del carrito:', validationResult.error);
+      return;
+    }
+
     setItems(prevItems => {
       const existingItem = prevItems.find(item => item.productId === product.productId);
       

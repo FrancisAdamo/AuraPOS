@@ -14,6 +14,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'NutriFit Pro',
     currentStock: 45,
     status: StockStatus.NORMAL,
+    barcode: '1234567890123',
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'NutriFit Pro',
     currentStock: 32,
     status: StockStatus.NORMAL,
+    barcode: '2345678901234',
   },
   {
     id: 3,
@@ -38,6 +40,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'PowerLabs',
     currentStock: 8,
     status: StockStatus.LOW,
+    barcode: '34567890123',
   },
   {
     id: 4,
@@ -50,6 +53,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'AminoMax',
     currentStock: 2,
     status: StockStatus.CRITICAL,
+    barcode: '4567890123',
   },
   {
     id: 5,
@@ -62,6 +66,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'VitaHealth',
     currentStock: 18,
     status: StockStatus.NORMAL,
+    barcode: '5678901234',
   },
   {
     id: 6,
@@ -74,6 +79,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'MarineLabs',
     currentStock: 12,
     status: StockStatus.NORMAL,
+    barcode: '5678901234',
   },
   {
     id: 7,
@@ -86,6 +92,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'CollagenPro',
     currentStock: 3,
     status: StockStatus.CRITICAL,
+    barcode: '6789012345',
   },
   {
     id: 8,
@@ -98,6 +105,7 @@ export const PRODUCT_CATALOG: readonly Product[] = [
     provider: 'ProteinSnacks',
     currentStock: 28,
     status: StockStatus.NORMAL,
+    barcode: '7890123456',
   },
 ] as const;
 

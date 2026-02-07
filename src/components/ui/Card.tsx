@@ -16,9 +16,9 @@ export default function Card({
   const baseClasses = 'notion-card rounded-lg transition-all duration-200';
   
   const variantClasses = {
-    default: 'bg-notion-background border-notion-border',
-    bordered: 'bg-notion-background border-2 border-notion-border',
-    elevated: 'bg-notion-background border-notion-border shadow-md',
+  default: 'bg-notion-background border-notion-border',
+  bordered: 'bg-notion-background border-2 border-notion-border',
+  elevated: 'bg-notion-background border-notion-border shadow-md',
   };
 
   const paddingClasses = {

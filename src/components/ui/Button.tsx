@@ -28,7 +28,7 @@ export default function Button({
   const baseClasses = 'notion-button font-medium inline-flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-notion-blue focus:ring-offset-2';
   
   const variantClasses = {
-    primary: 'bg-notion-blue text-white hover:bg-blue-600 focus:ring-notion-blue',
+    primary: 'bg-notion-blue text-white hover:bg-notion-blue focus:ring-notion-blue',
     secondary: 'bg-transparent text-notion-primary border border-notion-border hover:bg-notion-hover focus:ring-notion-primary',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500',
     ghost: 'bg-transparent text-notion-primary hover:bg-notion-hover focus:ring-notion-primary',

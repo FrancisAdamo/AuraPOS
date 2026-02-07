@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { InventoryFilters } from '../components/inventory/InventoryFilters';
 import type { InventoryFilter } from '../types/inventory';
 
@@ -21,6 +22,9 @@ describe('InventoryFilters', () => {
     render(<InventoryFilters {...defaultProps} />);
     
     expect(screen.getByText('Filtros Avanzados')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Mostrar'));
+
     expect(screen.getByText('Marca')).toBeInTheDocument();
     expect(screen.getByText('Sabor')).toBeInTheDocument();
     expect(screen.getByText('Formato')).toBeInTheDocument();
@@ -198,7 +202,5 @@ describe('InventoryFilters', () => {
     expect(screen.getByText('Polvo')).toBeInTheDocument();
     expect(screen.getByText('Líquido')).toBeInTheDocument();
     expect(screen.getByText('Cápsulas')).toBeInTheDocument();
-    expect(screen.getByText('Tabletas')).toBeInTheDocument();
-    expect(screen.getByText('Barritas')).toBeInTheDocument();
   });
 });

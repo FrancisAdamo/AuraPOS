@@ -26,17 +26,13 @@ describe('PointOfSaleTerminal.tsx', () => {
 
   it('debe agregar un producto al carrito', () => {
     render(<PointOfSaleTerminal />);
-    // Hacer clic en la primera tarjeta de producto para agregar al carrito
-    const productCards = screen.getAllByRole('button');
-    const firstProductCard = productCards.find(card => 
-      card.textContent && card.textContent.includes('Proteína Whey Vainilla')
-    );
-    if (firstProductCard) {
-      fireEvent.click(firstProductCard);
-    }
+    const occurrencesBefore = screen.getAllByText(/Proteína Whey Vainilla/i).length;
+    const addButton = screen.getByRole('button', { name: /Agregar Proteína Whey Vainilla al carrito/i });
+    fireEvent.click(addButton);
     
     // Verificar que el carrito se actualizó
-    expect(screen.getByText(/Proteína Whey Vainilla/i)).toBeInTheDocument();
+    const occurrencesAfter = screen.getAllByText(/Proteína Whey Vainilla/i).length;
+    expect(occurrencesAfter).toBeGreaterThan(occurrencesBefore);
   });
 
   it('debe mostrar el total del carrito', () => {
@@ -44,13 +40,11 @@ describe('PointOfSaleTerminal.tsx', () => {
     expect(screen.getByText(/Total:/i)).toBeInTheDocument();
   });
 
-  it('debe permitir aplicar descuento en porcentaje', () => {
+  it('debe permitir abrir el input de descuento', () => {
     render(<PointOfSaleTerminal />);
-    const discountInput = screen.queryByPlaceholderText(/Descuento/i);
-    if (discountInput) {
-      fireEvent.change(discountInput, { target: { value: '10' } });
-      expect(screen.getByText(/Descuento aplicado/i)).toBeInTheDocument();
-    }
+    const discountButton = screen.getByRole('button', { name: /Descuento/i });
+    fireEvent.click(discountButton);
+    expect(screen.getByPlaceholderText(/%/i)).toBeInTheDocument();
   });
 
   it('debe mostrar el botón de finalizar venta', () => {
@@ -74,37 +68,21 @@ describe('PointOfSaleTerminal.tsx', () => {
 
   it('debe permitir aumentar cantidad de producto en carrito', () => {
     render(<PointOfSaleTerminal />);
-    // Agregar un producto primero
-    const productCards = screen.getAllByRole('button');
-    const firstProductCard = productCards.find(card => 
-      card.textContent && card.textContent.includes('Proteína Whey Vainilla')
-    );
-    if (firstProductCard) {
-      fireEvent.click(firstProductCard);
-    }
-    
-    // Buscar botones de incremento por rol
-    const incrementButtons = screen.queryAllByRole('button', { name: /incrementar|\+/i });
-    if (incrementButtons.length > 0) {
-      fireEvent.click(incrementButtons[0]);
-    }
+    const addButton = screen.getByRole('button', { name: /Agregar Proteína Whey Vainilla al carrito/i });
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+
+    expect(screen.getByText(/x 2/i)).toBeInTheDocument();
   });
 
   it('debe permitir disminuir cantidad de producto en carrito', () => {
     render(<PointOfSaleTerminal />);
-    // Agregar un producto primero
-    const productCards = screen.getAllByRole('button');
-    const firstProductCard = productCards.find(card => 
-      card.textContent && card.textContent.includes('Proteína Whey Vainilla')
-    );
-    if (firstProductCard) {
-      fireEvent.click(firstProductCard);
-    }
-    
-    // Buscar botones de decremento por rol
-    const decrementButtons = screen.queryAllByRole('button', { name: /decrementar|-/i });
-    if (decrementButtons.length > 0) {
-      fireEvent.click(decrementButtons[0]);
-    }
+    const addButton = screen.getByRole('button', { name: /Agregar Proteína Whey Vainilla al carrito/i });
+    fireEvent.click(addButton);
+
+    const removeButton = screen.getByRole('button', { name: /Eliminar del carrito/i });
+    fireEvent.click(removeButton);
+
+    expect(screen.getByText(/El carrito está vacío/i)).toBeInTheDocument();
   });
 });

@@ -1,4 +1,5 @@
-import type { InputHTMLAttributes } from 'react';
+import { forwardRef } from 'react';
+import type { InputHTMLAttributes, Ref } from 'react';
 
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: string;
@@ -7,9 +8,11 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>
   size?: 'sm' | 'md' | 'lg';
   variant?: 'default' | 'search';
   required?: boolean;
+  inputRef?: Ref<HTMLInputElement>;
+  ref?: Ref<HTMLInputElement>;
 }
 
-export default function Input({
+const Input = forwardRef<HTMLInputElement, InputProps>(function Input({
   label,
   error,
   helperText,
@@ -17,8 +20,11 @@ export default function Input({
   variant = 'default',
   required = false,
   className = '',
+  inputRef,
   ...props
-}: InputProps) {
+}: InputProps, ref) {
+  const { ref: propsRef, ...inputProps } = props;
+
   const baseClasses = 'border border-notion-border rounded-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-notion-blue focus:border-transparent';
   
   const sizeClasses = {
@@ -28,7 +34,7 @@ export default function Input({
   };
 
   const variantClasses = {
-    default: 'bg-notion-background',
+    default: 'bg-notion-background border-notion-border',
     search: 'bg-notion-background pl-10',
   };
 
@@ -55,11 +61,21 @@ export default function Input({
       
       <div className="relative">
         <input
+          ref={(node) => {
+            if (typeof ref === 'function') ref(node);
+            else if (ref) (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+
+            if (typeof inputRef === 'function') inputRef(node);
+            else if (inputRef) (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+
+            if (typeof propsRef === 'function') propsRef(node);
+            else if (propsRef) (propsRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
+          }}
           className={classes}
           aria-invalid={!!error}
           aria-describedby={error ? `${props.id || 'input'}-error` : helperText ? `${props.id || 'input'}-helper` : undefined}
           aria-required={required}
-          {...props}
+          {...inputProps}
         />
         
         {variant === 'search' && (
@@ -93,4 +109,6 @@ export default function Input({
       )}
     </div>
   );
-}
+});
+
+export default Input;

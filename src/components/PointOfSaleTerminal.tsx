@@ -8,6 +8,7 @@ import type { ProductSaleItem } from '../types/products';
 
 export default function PointOfSaleTerminal() {
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCheckoutSuccess, setShowCheckoutSuccess] = useState(false);
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const [showDiscountInput, setShowDiscountInput] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -24,11 +25,12 @@ export default function PointOfSaleTerminal() {
 
   const addToCart = (product: typeof PRODUCT_CATALOG[0]) => {
     const saleItem: ProductSaleItem = {
-      productId: product.sku,
+      productId: String(product.id),
       productName: product.name,
       unitPrice: product.unitPrice,
       quantity: 1,
       subtotal: product.unitPrice,
+      barcode: product.barcode,
     };
     addItem(saleItem);
     setShowSuccess(true);
@@ -37,6 +39,34 @@ export default function PointOfSaleTerminal() {
 
   const removeFromCart = (productId: string) => {
     removeItem(productId);
+  };
+
+  const handleCheckout = () => {
+    if (isEmpty) {
+      return;
+    }
+
+    // Calcular total con descuento
+    const discountedTotal = total * (1 - discountPercentage / 100);
+    
+    // Simular procesamiento de venta
+    console.log('Procesando venta:', {
+      items: items.length,
+      subtotal: total,
+      discount: discountPercentage,
+      total: discountedTotal
+    });
+
+    // Vaciar carrito
+    clearCart();
+    
+    // Resetear descuento
+    setDiscountPercentage(0);
+    setShowDiscountInput(false);
+    
+    // Mostrar confirmación
+    setShowCheckoutSuccess(true);
+    setTimeout(() => setShowCheckoutSuccess(false), 3000);
   };
 
   return (
@@ -55,7 +85,7 @@ export default function PointOfSaleTerminal() {
         {/* Catálogo de productos */}
         <div className="flex-1">
           <Input
-            ref={searchInputRef}
+            inputRef={searchInputRef}
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
@@ -65,17 +95,29 @@ export default function PointOfSaleTerminal() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
             {filteredItems.map(product => (
               <Card 
-                key={product.id} 
-                className="hover:shadow-md cursor-pointer transition-all duration-200"
-                onClick={() => addToCart(product)}
+                key={product.sku} 
+                className="hover:shadow-md transition-all duration-200"
               >
                 <div className="p-6">
-                  <h3 className="text-lg font-semibold text-notion-primary m-0 mb-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-notion-secondary text-base m-0">
-                    ${product.unitPrice.toFixed(2)}
-                  </p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-semibold text-notion-primary m-0 mb-2 truncate">
+                        {product.name}
+                      </h3>
+                      <p className="text-notion-secondary text-base m-0">
+                        ${product.unitPrice.toFixed(2)}
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="sm"
+                      onClick={() => addToCart(product)}
+                      aria-label={`Agregar ${product.name} al carrito`}
+                    >
+                      +
+                    </Button>
+                  </div>
                 </div>
               </Card>
             ))}
@@ -129,7 +171,7 @@ export default function PointOfSaleTerminal() {
                 <div className="flex justify-between mb-4">
                   <span className="font-semibold">Total:</span>
                   <span className="font-bold text-xl">
-                    ${total.toFixed(2)}
+                    ${(total * (1 - discountPercentage / 100)).toFixed(2)}
                   </span>
                 </div>
 
@@ -159,7 +201,7 @@ export default function PointOfSaleTerminal() {
                   <Button onClick={clearCart} variant="secondary" size="sm">
                     Vaciar
                   </Button>
-                  <Button onClick={() => {}} variant="primary" size="sm">
+                  <Button onClick={handleCheckout} variant="primary" size="sm">
                     <CheckCircle size={16} />
                     Cobrar
                   </Button>
@@ -174,6 +216,13 @@ export default function PointOfSaleTerminal() {
       {showSuccess && (
         <div className="fixed top-8 right-8 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
           ✓ Producto agregado al carrito
+        </div>
+      )}
+
+      {/* Mensaje de confirmación de venta */}
+      {showCheckoutSuccess && (
+        <div className="fixed top-8 right-8 bg-blue-500 text-white p-4 rounded-lg shadow-lg z-50">
+          ✓ Venta procesada exitosamente
         </div>
       )}
     </div>

@@ -20,11 +20,11 @@ export const productSchema = z.object({
     .max(50, 'El proveedor no puede exceder 50 caracteres'),
   
   stock: z
-    .string()
-    .regex(/^\d+$/, 'El stock debe ser un número entero positivo')
-    .transform((val) => parseInt(val, 10))
-    .refine((val) => val >= 0, 'El stock no puede ser negativo')
-    .refine((val) => val <= 99999, 'El stock no puede exceder 99999 unidades'),
+    .coerce
+    .number({ message: 'El stock debe ser un número entero positivo' })
+    .int('El stock debe ser un número entero positivo')
+    .min(0, 'El stock no puede ser negativo')
+    .max(99999, 'El stock no puede exceder 99999 unidades'),
   
   barcode: z
     .string()
@@ -53,8 +53,12 @@ export const productSchema = z.object({
     .optional(),
   
   format: z
-    .enum(['Polvo', 'Líquido', 'Cápsulas', 'Tabletas', 'Barritas'])
-    .optional(),
+    .union([
+      z.enum(['Polvo', 'Líquido', 'Cápsulas', 'Tabletas', 'Barritas']),
+      z.literal(''),
+    ])
+    .optional()
+    .transform((value) => (value === '' ? undefined : value)),
   
   weight: z
     .string()

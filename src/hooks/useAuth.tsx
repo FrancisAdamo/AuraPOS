@@ -1,18 +1,18 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { User, AuthState, AuthContextType, Permission } from '../types/auth';
+import type { User, AuthState, AuthContextType, Permission, UserRole } from '../types/auth';
 import { ROLE_PERMISSIONS } from '../types/auth';
 
 const MOCK_USERS: User[] = [
   {
     id: '1',
-    name: 'Admin Owner',
+    name: 'Admin Dueño',
     email: 'owner@aurapos.com',
     role: 'owner',
   },
   {
     id: '2',
-    name: 'Vendor User',
+    name: 'Usuario Vendedor',
     email: 'vendor@aurapos.com',
     role: 'vendor',
   },
@@ -74,11 +74,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return ROLE_PERMISSIONS[state.user.role].includes(permission as Permission);
   };
 
+  const switchRole = (role: UserRole) => {
+    const user = MOCK_USERS.find(u => u.role === role);
+    if (user) {
+      localStorage.setItem('aurapos_user', JSON.stringify(user));
+      setState({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+      });
+    }
+  };
+
   const value: AuthContextType = {
     ...state,
     login,
     logout,
     hasPermission,
+    switchRole,
   };
 
   return (

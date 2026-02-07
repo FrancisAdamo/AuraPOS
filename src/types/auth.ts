@@ -18,6 +18,7 @@ export interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   hasPermission: (permission: string) => boolean;
+  switchRole: (role: UserRole) => void;
 }
 
 export const PERMISSIONS = {
@@ -34,8 +35,8 @@ export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
 export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   owner: Object.values(PERMISSIONS),
   vendor: [
-    PERMISSIONS.VIEW_DASHBOARD,
     PERMISSIONS.VIEW_POS,
     PERMISSIONS.VIEW_INVENTORY,
+    PERMISSIONS.VIEW_CLOSING,
   ],
 };

@@ -43,6 +43,7 @@ export interface Product {
   provider: string;
   currentStock: StockQuantity;
   status: StockStatus;
+  barcode: string; // Código de barras numérico
 }
 
 export interface ProductSaleItem {
@@ -51,6 +52,7 @@ export interface ProductSaleItem {
   unitPrice: MonetaryAmount;
   quantity: SaleQuantity;
   subtotal: MonetaryAmount;
+  barcode: string;
 }
 
 export interface InventoryItem {

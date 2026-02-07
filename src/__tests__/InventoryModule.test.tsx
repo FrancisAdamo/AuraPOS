@@ -15,8 +15,8 @@ describe('InventoryModule.tsx', () => {
 
   it('debe mostrar los proveedores disponibles', () => {
     render(<InventoryModule />);
-    expect(screen.getByText(/MuscleFit/i)).toBeInTheDocument();
-    expect(screen.getByText(/FitNutrition/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/MuscleFit/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/FitNutrition/i).length).toBeGreaterThan(0);
   });
 
   it('debe mostrar el campo de búsqueda', () => {
@@ -43,6 +43,13 @@ describe('InventoryModule.tsx', () => {
     if (filterButton) {
       fireEvent.click(filterButton);
     }
+
+    const groupButton = muscleButtons.find(button => 
+      button.textContent && !button.textContent.includes('(')
+    );
+    if (groupButton) {
+      fireEvent.click(groupButton);
+    }
     
     // Verificar que se expanda el grupo de MuscleFit
     expect(screen.getByText(/Proteína Whey Vainilla 1kg/i)).toBeInTheDocument();
@@ -60,10 +67,16 @@ describe('InventoryModule.tsx', () => {
     }
     
     // Hacer clic en el grupo expandido para ver los detalles
-    const expandedGroup = screen.getByRole('button', { name: /MuscleFit/i });
-    fireEvent.click(expandedGroup);
-    
-    expect(screen.getByText(/Stock:/i)).toBeInTheDocument();
+    const groupButton = muscleButtons.find(button => 
+      button.textContent && !button.textContent.includes('(')
+    );
+    if (groupButton) {
+      fireEvent.click(groupButton);
+    }
+
+    expect(screen.getByText('SKU')).toBeInTheDocument();
+    expect(screen.getByText('Producto')).toBeInTheDocument();
+    expect(screen.getByText('Stock actual')).toBeInTheDocument();
   });
 
   it('debe mostrar badges de estado de stock', () => {
@@ -78,11 +91,15 @@ describe('InventoryModule.tsx', () => {
     }
     
     // Hacer clic en el grupo expandido para ver los detalles
-    const expandedGroup = screen.getByRole('button', { name: /MuscleFit/i });
-    fireEvent.click(expandedGroup);
+    const groupButton = muscleButtons.find(button => 
+      button.textContent && !button.textContent.includes('(')
+    );
+    if (groupButton) {
+      fireEvent.click(groupButton);
+    }
     
     // Verificar que hay badges de estado
-    const statusBadges = screen.queryAllByText(/Normal|Bajo|Crítico/i);
+    const statusBadges = screen.queryAllByText(/En stock|Stock bajo|Crítico/i);
     expect(statusBadges.length).toBeGreaterThan(0);
   });
 

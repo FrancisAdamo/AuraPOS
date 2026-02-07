@@ -15,27 +15,27 @@ describe('CashClosing.tsx', () => {
 
   it('debe mostrar las tres pestañas: Resumen, Cierre, Apertura', () => {
     render(<CashClosing />);
-    expect(screen.getByText(/Resumen/i)).toBeInTheDocument();
-    expect(screen.getByText(/Cierre/i)).toBeInTheDocument();
-    expect(screen.getByText(/Apertura/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Resumen/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Cierre/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Apertura/i })).toBeInTheDocument();
   });
 
   it('debe mostrar el resumen del día inicial', () => {
     render(<CashClosing />);
-    expect(screen.getByText(/36,450/)).toBeInTheDocument(); // Total bruto
-    expect(screen.getByText(/12,500/)).toBeInTheDocument(); // Efectivo
+    expect(screen.getByText(/2845/)).toBeInTheDocument(); // Total bruto
+    expect(screen.getByText(/950/)).toBeInTheDocument(); // Efectivo
   });
 
   it('debe navegar a la pestaña Cierre cuando se hace clic', () => {
     render(<CashClosing />);
-    const closingTab = screen.getAllByText(/Cierre/i)[0];
+    const closingTab = screen.getByRole('button', { name: /Cierre/i });
     fireEvent.click(closingTab);
     expect(screen.getByText(/Efectivo Contado Manualmente/i)).toBeInTheDocument();
   });
 
   it('debe validar el monto de efectivo contado', () => {
     render(<CashClosing />);
-    const closingTab = screen.getAllByText(/Cierre/i)[0];
+    const closingTab = screen.getByRole('button', { name: /Cierre/i });
     fireEvent.click(closingTab);
     
     const input = screen.getByPlaceholderText(/Ingresa el monto contado/i) as HTMLInputElement;
@@ -46,7 +46,7 @@ describe('CashClosing.tsx', () => {
 
   it('debe detectar discrepancia cuando el monto no coincide', () => {
     render(<CashClosing />);
-    const closingTab = screen.getAllByText(/Cierre/i)[0];
+    const closingTab = screen.getByRole('button', { name: /Cierre/i });
     fireEvent.click(closingTab);
     
     const input = screen.getByPlaceholderText(/Ingresa el monto contado/i) as HTMLInputElement;
@@ -58,7 +58,7 @@ describe('CashClosing.tsx', () => {
 
   it('debe permitir agregar un retiro de efectivo', () => {
     render(<CashClosing />);
-    const closingTab = screen.getAllByText(/Cierre/i)[0];
+    const closingTab = screen.getByRole('button', { name: /Cierre/i });
     fireEvent.click(closingTab);
     
     const addWithdrawalButton = screen.getByText(/Agregar Retiro/i);
@@ -79,25 +79,25 @@ describe('CashClosing.tsx', () => {
 
   it('debe mostrar el resumen de efectivo en la pestaña de apertura', () => {
     render(<CashClosing />);
-    const closingTab = screen.getAllByText(/Cierre/i)[0];
+    const closingTab = screen.getByRole('button', { name: /Cierre/i });
     fireEvent.click(closingTab);
     
-    const input = screen.getByPlaceholderText(/Ingresa el monto contado/i) as HTMLInputElement;
-    fireEvent.change(input, { target: { value: '12500' } });
+    const input = screen.getByPlaceholderText('Ingresa el monto contado') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '950' } });
     
     const confirmButton = screen.getByText(/Confirmar Cierre/i);
     fireEvent.click(confirmButton);
-    
-    expect(screen.getByText(/Apertura de Caja/i)).toBeInTheDocument();
+
+    expect(screen.getByRole('heading', { name: /Apertura de Caja - Día Siguiente/i })).toBeInTheDocument();
   });
 
   it('debe tener un checkbox para confirmar saldo inicial', () => {
     render(<CashClosing />);
-    const closingTab = screen.getAllByText(/Cierre/i)[0];
+    const closingTab = screen.getByRole('button', { name: /Cierre/i });
     fireEvent.click(closingTab);
     
-    const input = screen.getByPlaceholderText(/Ingresa el monto contado/i) as HTMLInputElement;
-    fireEvent.change(input, { target: { value: '12500' } });
+    const input = screen.getByPlaceholderText('Ingresa el monto contado') as HTMLInputElement;
+    fireEvent.change(input, { target: { value: '950' } });
     
     const confirmButton = screen.getByText(/Confirmar Cierre/i);
     fireEvent.click(confirmButton);

@@ -1,21 +1,18 @@
-import { BarChart3, Boxes, Zap, LogOut, HelpCircle } from 'lucide-react';
+import { BarChart3, Boxes, Zap, LogOut, HelpCircle, UserCircle, Power } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.tsx';
 import { PERMISSIONS } from '../types/auth';
 
-interface SidebarProps {
-  activeView: string;
-  onViewChange: (view: string) => void;
-}
-
-export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
-  const { hasPermission } = useAuth();
+export default function Sidebar() {
+  const { hasPermission, user, switchRole, logout } = useAuth();
+  const navigate = useNavigate();
   
   const allMenuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, permission: PERMISSIONS.VIEW_DASHBOARD },
-    { id: 'pos', label: 'Ventas (POS)', icon: Zap, permission: PERMISSIONS.VIEW_POS },
-    { id: 'inventory', label: 'Inventario', icon: Boxes, permission: PERMISSIONS.VIEW_INVENTORY },
-    { id: 'closing', label: 'Cierre de caja', icon: LogOut, permission: PERMISSIONS.VIEW_CLOSING },
-    { id: 'help', label: 'Ayuda', icon: HelpCircle, permission: null }, // Accesible para todos
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, permission: PERMISSIONS.VIEW_DASHBOARD, to: '/dashboard' },
+    { id: 'pos', label: 'Ventas (POS)', icon: Zap, permission: PERMISSIONS.VIEW_POS, to: '/pos' },
+    { id: 'inventory', label: 'Inventario', icon: Boxes, permission: PERMISSIONS.VIEW_INVENTORY, to: '/inventory' },
+    { id: 'closing', label: 'Cierre de caja', icon: LogOut, permission: PERMISSIONS.VIEW_CLOSING, to: '/closing' },
+    { id: 'help', label: 'Ayuda', icon: HelpCircle, permission: null, to: '/help' }, // Accesible para todos
   ];
 
   // Filtrar items según permisos del usuario
@@ -43,23 +40,21 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
       >
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeView === item.id;
           
           return (
-            <button
+            <NavLink
               key={item.id}
-              onClick={() => onViewChange(item.id)}
-              className={`w-full flex items-center gap-3 p-3 rounded-sm font-medium text-base transition-all duration-200 border-none cursor-pointer ${
-                isActive 
-                  ? 'bg-blue-100 text-blue-600 border-l-2 border-l-blue-600 pl-4' 
+              to={item.to}
+              className={({ isActive }: { isActive: boolean }) => `w-full flex items-center gap-3 p-3 rounded-sm font-medium text-base transition-all duration-200 border-none cursor-pointer ${
+                isActive
+                  ? 'bg-blue-100 text-blue-600 border-l-2 border-l-blue-600 pl-4'
                   : 'bg-transparent text-notion-primary hover:bg-notion-hover'
               }`}
-              aria-current={isActive}
               aria-label={`Navegar a ${item.label}`}
             >
               <Icon size={20} aria-hidden="true" />
               <span>{item.label}</span>
-            </button>
+            </NavLink>
           );
         })}
       </nav>
@@ -67,10 +62,55 @@ export default function Sidebar({ activeView, onViewChange }: SidebarProps) {
       {/* Footer */}
       <footer 
         role="contentinfo" 
-        className="p-6 border-t border-notion-border text-notion-secondary text-sm flex flex-col gap-2"
+        className="p-6 border-t border-notion-border text-notion-secondary text-sm flex flex-col gap-4"
       >
-        <p className="m-0">Versión 1.0.0</p>
-        <p className="m-0">© 2026 AuraPOS - All rights reserved</p>
+        {/* Role Selector */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-notion-primary font-medium">
+            <UserCircle size={16} />
+            <span>Rol: {user?.role === 'owner' ? 'Dueño' : 'Vendedor'}</span>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => switchRole('owner')}
+              className={`flex-1 py-1 px-2 rounded text-xs transition-colors ${
+                user?.role === 'owner' 
+                  ? 'bg-purple-100 text-purple-700 font-bold' 
+                  : 'bg-notion-hover text-notion-secondary'
+              }`}
+            >
+              Dueño
+            </button>
+            <button
+              onClick={() => switchRole('vendor')}
+              className={`flex-1 py-1 px-2 rounded text-xs transition-colors ${
+                user?.role === 'vendor' 
+                  ? 'bg-blue-100 text-blue-700 font-bold' 
+                  : 'bg-notion-hover text-notion-secondary'
+              }`}
+            >
+              Vendedor
+            </button>
+          </div>
+        </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={() => {
+            logout();
+            navigate('/login');
+          }}
+          className="flex items-center gap-2 w-full p-2 rounded text-xs text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
+          aria-label="Cerrar sesión"
+        >
+          <Power size={14} />
+          <span>Cerrar Sesión</span>
+        </button>
+
+        <div className="flex flex-col gap-1 opacity-60">
+          <p className="m-0">Versión 1.0.0</p>
+          <p className="m-0">© 2026 AuraPOS</p>
+        </div>
       </footer>
     </aside>
   );

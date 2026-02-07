@@ -1,54 +1,79 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
 
 // Mock de hooks para evitar errores de contexto
-vi.mock('../hooks/useAuth', () => ({
-  useAuth: () => ({
-    hasPermission: () => true,
-    user: { name: 'Test User' },
-    logout: vi.fn()
-  })
-}));
-
-vi.mock('../hooks/useStore', () => ({
-  useStore: () => ({
-    store: { id: '1', name: 'Test Store' }
-  })
-}));
+vi.mock('../hooks/useAuth', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../hooks/useAuth')>();
+  return {
+    ...actual,
+    useAuth: () => ({
+      hasPermission: () => true,
+      user: { name: 'Test User', role: 'owner' },
+      isAuthenticated: true,
+      isLoading: false,
+      login: vi.fn(async () => {}),
+      logout: vi.fn(),
+    }),
+  };
+});
 
 describe('App.tsx', () => {
   beforeEach(() => {
     // Reset del estado antes de cada test
   });
 
-  it('debe renderizar el App correctamente', () => {
-    render(<App />);
-    expect(screen.getByRole('button', { name: /Dashboard/i })).toBeInTheDocument();
+  it('debe renderizar el App correctamente', async () => {
+    render(
+      <MemoryRouter initialEntries={['/pos']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(await screen.findByText(/Ventas \(POS\)/i)).toBeInTheDocument();
   });
 
-  it('debe mostrar la vista Dashboard por defecto', () => {
-    render(<App />);
-    expect(screen.getByRole('heading', { name: /Dashboard/i })).toBeInTheDocument();
+  it('debe mostrar la vista POS por defecto al entrar en /', async () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(await screen.findByText(/Módulo de ventas \(POS\)/i)).toBeInTheDocument();
   });
 
-  it('debe navegar a POS cuando se hace clic en el botón POS', () => {
-    render(<App />);
-    const posButton = screen.getByRole('button', { name: /Ventas \(POS\)/i });
-    fireEvent.click(posButton);
-    expect(screen.getByText(/Módulo de ventas \(POS\)/i)).toBeInTheDocument();
+  it('debe navegar a Dashboard cuando se hace clic en el link Dashboard', async () => {
+    render(
+      <MemoryRouter initialEntries={['/pos']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    const dashboardLink = screen.getByRole('link', { name: /Navegar a Dashboard/i });
+    fireEvent.click(dashboardLink);
+
+    expect(screen.getByRole('link', { name: /Navegar a Dashboard/i })).toHaveAttribute('aria-current', 'page');
   });
 
-  it('debe navegar a Inventory cuando se hace clic en el botón Inventory', () => {
-    render(<App />);
-    const inventoryButton = screen.getByRole('button', { name: /Inventario/i });
-    fireEvent.click(inventoryButton);
-    expect(screen.getByText(/Módulo de inventario/i)).toBeInTheDocument();
+  it('debe navegar a Inventario cuando se hace clic en el link Inventario', async () => {
+    render(
+      <MemoryRouter initialEntries={['/pos']}>
+        <App />
+      </MemoryRouter>
+    );
+
+    const inventoryLink = screen.getByRole('link', { name: /Navegar a Inventario/i });
+    fireEvent.click(inventoryLink);
+    expect(await screen.findByRole('link', { name: /Inventario/i })).toBeInTheDocument();
   });
 
   it('debe abrir la paleta de comandos con Cmd+K', () => {
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/pos']}>
+        <App />
+      </MemoryRouter>
+    );
     
     // Simular el evento de teclado correctamente
     fireEvent.keyDown(document, {
@@ -62,13 +87,21 @@ describe('App.tsx', () => {
   });
 
   it('debe mostrar el indicador Cmd+K en la pantalla', () => {
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/pos']}>
+        <App />
+      </MemoryRouter>
+    );
     expect(screen.getByText(/\+ K para comandos/i)).toBeInTheDocument();
   });
 
   it('debe abrir AuraBrain cuando se hace clic en el botón flotante', () => {
-    render(<App />);
-    const auraBrainButton = screen.getByRole('button', { name: /Aura Brain/i });
+    render(
+      <MemoryRouter initialEntries={['/pos']}>
+        <App />
+      </MemoryRouter>
+    );
+    const auraBrainButton = screen.getByRole('button', { name: /Activar asistente Aura Brain/i });
     fireEvent.click(auraBrainButton);
     expect(screen.getByText(/Hola! Soy Aura Brain/i)).toBeInTheDocument();
   });

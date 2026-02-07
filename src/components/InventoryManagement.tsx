@@ -3,8 +3,6 @@ import { PRODUCT_CATALOG } from '../data/products';
 import { useStore } from '../hooks/useStore';
 import { useInventorySearch } from '../hooks/useInventorySearch';
 import { Card, Button, Input } from './ui';
-import { InventoryCommandPalette } from './inventory/InventoryCommandPalette';
-import { InventoryFilters } from './inventory/InventoryFilters';
 import type { StockStatus } from '../types/products';
 import type { ProductFormData, InventoryFilter } from '../types/inventory';
 
@@ -12,7 +10,6 @@ export default function InventoryManagement() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState<InventoryFilter>({});
   const [showCommandPalette, setShowCommandPalette] = useState(false);
   
   const [formData, setFormData] = useState<ProductFormData>({
@@ -52,7 +49,16 @@ export default function InventoryManagement() {
     vegan: false,
   }));
 
-  const { filteredProducts, stats } = useInventorySearch(inventoryProducts, searchTerm, filters);
+  // Filtrar productos por término de búsqueda y sucursal actual
+  const filteredProducts = inventoryProducts.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.provider.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Filtrar por stock de la sucursal actual
+  });
+
+  const { filteredProducts: filteredProductsHook } = useInventorySearch(inventoryProducts, searchTerm);
   const { currentStore, stores, setStore } = useStore();
 
   useEffect(() => {
@@ -92,13 +98,37 @@ export default function InventoryManagement() {
     }
   };
 
-  const getStatusColor = (status: StockStatus) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'red': return '#dc2626';
       case 'yellow': return '#f59e0b';
       case 'green': return '#16a34a';
       default: return '#6b7280';
     }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'red': return 'Crítico';
+      case 'yellow': return 'Bajo';
+      case 'green': return 'Normal';
+      default: return 'Desconocido';
+    }
+  };
+
+  const getStatusBadgeClass = (status: string) => {
+    switch (status) {
+      case 'red': return 'bg-red-100 text-red-800 border-red-200';
+      case 'yellow': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'green': return 'bg-green-100 text-green-800 border-green-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getStatusByStock = (stock: number): StockStatus => {
+    if (stock <= 5) return 'red';
+    if (stock <= 15) return 'yellow';
+    return 'green';
   };
 
   return (
@@ -305,39 +335,49 @@ export default function InventoryManagement() {
       {/* Búsqueda y lista de productos */}
       <div>
         <Input
-          placeholder="Buscar por nombre, SKU o proveedor..."
+          placeholder="Buscar productos por nombre, SKU o proveedor..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           variant="search"
+          className="w-full px-4 py-3"
         />
         
-        <div className="mt-4">
-          {filteredItems.map(item => (
-            <Card key={item.id} className="mb-4">
-              <div className="p-6">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="text-lg font-semibold m-0 mb-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-notion-secondary text-sm m-0">
-                      SKU: {item.sku} | Proveedor: {item.provider}
-                    </p>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {filteredProducts.map((item) => {
+            const stockValue = Number.parseInt(item.stock, 10);
+            const safeStock = Number.isFinite(stockValue) ? stockValue : 0;
+            const status = getStatusByStock(safeStock);
+
+            return (
+              <Card key={item.sku} className="mb-4">
+                <div className="p-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-semibold m-0 mb-1">
+                        {item.name}
+                      </h3>
+                      <p className="text-notion-secondary text-sm m-0">
+                        SKU: {item.sku}
+                      </p>
+                    </div>
+                    <div className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusBadgeClass(status)}`}>
+                      {getStatusText(status)}
+                    </div>
                   </div>
-                  <div className="w-3 h-3 rounded-full" 
-                       style={{ backgroundColor: getStatusColor(item.status) }} />
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-sm font-medium">Stock:</span>
+                    <span
+                      className="text-lg font-semibold"
+                      style={{ color: getStatusColor(status) }}
+                    >
+                      {safeStock} unidades
+                    </span>
+                  </div>
                 </div>
-                
-                <div className="flex justify-between items-center mt-2">
-                  <span className="font-medium">Stock:</span>
-                  <span className="text-lg font-semibold" 
-                        style={{ color: getStatusColor(item.status) }}>
-                    {item.currentStock}
-                  </span>
-                </div>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       </div>
 
